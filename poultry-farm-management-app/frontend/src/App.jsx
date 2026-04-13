@@ -6,6 +6,7 @@ function App() {
   const [sales, setSales] = useState([]);
   const [batches, setBatches] = useState([]);
   const [selectedBatch, setSelectedBatch] = useState("");
+  const [editId, setEditId] = useState(null);
 
   const [formula, setFormula] = useState({
     maizePercent: "",
@@ -52,7 +53,7 @@ function App() {
 
   const fetchBatches = async () => {
     const res = await axios.get("http://localhost:8080/api/batches");
-    setBatches(res.data);
+    setBatches(res.data); // ✅ FIXED
   };
 
   useEffect(() => {
@@ -66,7 +67,7 @@ function App() {
     e.preventDefault();
 
     if (!form.category || !form.amount || !form.batchId) {
-      alert("All fields fill कर (including batch)");
+      alert("Fill all fields");
       return;
     }
 
@@ -93,15 +94,36 @@ function App() {
     fetchExpenses();
   };
 
-  // ➕ Add Batch
+  // ❌ Delete Batch
+  const deleteBatch = async (id) => {
+    await axios.delete(`http://localhost:8080/api/batches/${id}`);
+    fetchBatches();
+  };
+
+  // ➕ ADD + UPDATE Batch
   const handleBatchSubmit = async (e) => {
     e.preventDefault();
 
-    await axios.post("http://localhost:8080/api/batches", {
-      ...batchForm,
-      totalBirds: Number(batchForm.totalBirds),
-      mortality: Number(batchForm.mortality),
-    });
+    if (!batchForm.name || !batchForm.totalBirds) {
+      alert("Fill all batch fields");
+      return;
+    }
+
+    if (editId !== null) {
+      await axios.put(`http://localhost:8080/api/batches/${editId}`, {
+        id: editId,
+        ...batchForm,
+        totalBirds: Number(batchForm.totalBirds),
+        mortality: Number(batchForm.mortality),
+      });
+      setEditId(null);
+    } else {
+      await axios.post("http://localhost:8080/api/batches", {
+        ...batchForm,
+        totalBirds: Number(batchForm.totalBirds),
+        mortality: Number(batchForm.mortality),
+      });
+    }
 
     setBatchForm({
       name: "",
@@ -109,10 +131,10 @@ function App() {
       mortality: "",
     });
 
-    fetchBatches();
+    fetchBatches(); // ✅ refresh
   };
 
-  // ✅ Feed Formula Submit (FIXED POSITION)
+  // Feed Formula
   const handleFormulaSubmit = async (e) => {
     e.preventDefault();
 
@@ -139,7 +161,7 @@ function App() {
       <h1 style={{ textAlign: "center" }}>Poultry Expense Tracker 🐔</h1>
 
       {/* EXPENSE FORM */}
-      <form onSubmit={handleSubmit} style={{ display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center" }}>
+      <form style={{ display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center" }} onSubmit={handleSubmit}>
         <input placeholder="Category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
         <input placeholder="Amount" type="number" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} />
 
@@ -161,11 +183,9 @@ function App() {
 
       {/* DASHBOARD */}
       <div style={{ display: "flex", justifyContent: "center", gap: "20px", marginTop: "20px" }}>
-        <div style={cardStyle}><h3>Expense</h3><p>₹{total}</p></div>
-        <div style={cardStyle}><h3>Sales</h3><p>₹{totalSales}</p></div>
-        <div style={cardStyle}><h3>Profit</h3>
-          <p style={{ color: profit >= 0 ? "green" : "red" }}>₹{profit}</p>
-        </div>
+        <div style={card}><h3>Expense</h3><p>₹{total}</p></div>
+        <div style={card}><h3>Sales</h3><p>₹{totalSales}</p></div>
+        <div style={card}><h3>Profit</h3><p style={{ color: profit >= 0 ? "green" : "red" }}>₹{profit}</p></div>
       </div>
 
       {/* EXPENSE LIST */}
@@ -181,7 +201,7 @@ function App() {
           ))}
       </ul>
 
-      {/* SALES LIST */}
+      {/* SALES */}
       <h2>Sales</h2>
       <ul>
         {sales.map((s) => (
@@ -195,34 +215,52 @@ function App() {
         <input placeholder="Batch Name" value={batchForm.name} onChange={(e) => setBatchForm({ ...batchForm, name: e.target.value })} />
         <input placeholder="Total Birds" type="number" value={batchForm.totalBirds} onChange={(e) => setBatchForm({ ...batchForm, totalBirds: e.target.value })} />
         <input placeholder="Mortality" type="number" value={batchForm.mortality} onChange={(e) => setBatchForm({ ...batchForm, mortality: e.target.value })} />
-        <button>Add Batch</button>
+        <button>{editId !== null ? "Update Batch" : "Add Batch"}</button>
       </form>
+
+      {/* BATCH LIST */}
+      <h3>Batch List</h3>
+      <ul>
+        {batches.map((b) => (
+          <li key={b.id}>
+            <strong>{b.name}</strong> - Birds: {b.totalBirds} - Mortality: {b.mortality}
+
+            <button style={{ marginLeft: "10px" }} onClick={() => deleteBatch(b.id)}>Delete</button>
+
+            <button style={{ marginLeft: "10px" }} onClick={() => {
+              setEditId(b.id);
+              setBatchForm({
+                name: b.name,
+                totalBirds: b.totalBirds,
+                mortality: b.mortality,
+              });
+            }}>
+              Edit
+            </button>
+          </li>
+        ))}
+      </ul>
 
       {/* FEED FORMULA */}
       <h2>Feed Formula</h2>
       <form onSubmit={handleFormulaSubmit} style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
         <input placeholder="Maize %" onChange={(e) => setFormula({ ...formula, maizePercent: e.target.value })} />
         <input placeholder="Maize Price" onChange={(e) => setFormula({ ...formula, maizePrice: e.target.value })} />
-
         <input placeholder="Soya %" onChange={(e) => setFormula({ ...formula, soyaPercent: e.target.value })} />
         <input placeholder="Soya Price" onChange={(e) => setFormula({ ...formula, soyaPrice: e.target.value })} />
-
         <input placeholder="Dorb %" onChange={(e) => setFormula({ ...formula, dorbPercent: e.target.value })} />
         <input placeholder="Dorb Price" onChange={(e) => setFormula({ ...formula, dorbPrice: e.target.value })} />
-
         <input placeholder="Marble %" onChange={(e) => setFormula({ ...formula, marblePercent: e.target.value })} />
         <input placeholder="Marble Price" onChange={(e) => setFormula({ ...formula, marblePrice: e.target.value })} />
-
         <input placeholder="Premix %" onChange={(e) => setFormula({ ...formula, premixPercent: e.target.value })} />
         <input placeholder="Premix Price" onChange={(e) => setFormula({ ...formula, premixPrice: e.target.value })} />
-
         <button>Save Formula</button>
       </form>
     </div>
   );
 }
 
-const cardStyle = {
+const card = {
   border: "1px solid #ddd",
   padding: "10px",
   borderRadius: "10px",
