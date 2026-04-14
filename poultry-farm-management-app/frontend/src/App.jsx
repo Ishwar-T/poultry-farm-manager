@@ -5,21 +5,7 @@ function App() {
   const [expenses, setExpenses] = useState([]);
   const [sales, setSales] = useState([]);
   const [batches, setBatches] = useState([]);
-  const [selectedBatch, setSelectedBatch] = useState("");
   const [editId, setEditId] = useState(null);
-
-  const [formula, setFormula] = useState({
-    maizePercent: "",
-    maizePrice: "",
-    soyaPercent: "",
-    soyaPrice: "",
-    dorbPercent: "",
-    dorbPrice: "",
-    marblePercent: "",
-    marblePrice: "",
-    premixPercent: "",
-    premixPrice: "",
-  });
 
   const [form, setForm] = useState({
     category: "",
@@ -35,12 +21,29 @@ function App() {
     mortality: "",
   });
 
-  // 📊 calculations
-  const total = expenses.reduce((sum, e) => sum + Number(e.amount || 0), 0);
-  const totalSales = sales.reduce((sum, s) => sum + Number(s.amount || 0), 0);
+  const [formula, setFormula] = useState({
+    maizePercent: "",
+    maizePrice: "",
+    soyaPercent: "",
+    soyaPrice: "",
+    dorbPercent: "",
+    dorbPrice: "",
+    marblePercent: "",
+    marblePrice: "",
+    premixPercent: "",
+    premixPrice: "",
+  });
+
+  const total = expenses.reduce((s, e) => s + Number(e.amount || 0), 0);
+  const totalSales = sales.reduce((s, e) => s + Number(e.amount || 0), 0);
   const profit = totalSales - total;
 
-  // 📥 API calls
+  useEffect(() => {
+    fetchExpenses();
+    fetchSales();
+    fetchBatches();
+  }, []);
+
   const fetchExpenses = async () => {
     const res = await axios.get("http://localhost:8080/api/expenses");
     setExpenses(res.data);
@@ -53,23 +56,12 @@ function App() {
 
   const fetchBatches = async () => {
     const res = await axios.get("http://localhost:8080/api/batches");
-    setBatches(res.data); // ✅ FIXED
+    setBatches(res.data);
   };
 
-  useEffect(() => {
-    fetchExpenses();
-    fetchSales();
-    fetchBatches();
-  }, []);
-
-  // ➕ Add Expense
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!form.category || !form.amount || !form.batchId) {
-      alert("Fill all fields");
-      return;
-    }
+    if (!form.category || !form.amount || !form.batchId) return alert("Fill all");
 
     await axios.post("http://localhost:8080/api/expenses", {
       ...form,
@@ -77,193 +69,184 @@ function App() {
       batchId: Number(form.batchId),
     });
 
-    setForm({
-      category: "",
-      amount: "",
-      note: "",
-      date: "",
-      batchId: "",
-    });
-
+    setForm({ category: "", amount: "", note: "", date: "", batchId: "" });
     fetchExpenses();
   };
 
-  // ❌ Delete Expense
   const handleDelete = async (id) => {
     await axios.delete(`http://localhost:8080/api/expenses/${id}`);
     fetchExpenses();
   };
 
-  // ❌ Delete Batch
   const deleteBatch = async (id) => {
     await axios.delete(`http://localhost:8080/api/batches/${id}`);
     fetchBatches();
   };
 
-  // ➕ ADD + UPDATE Batch
   const handleBatchSubmit = async (e) => {
     e.preventDefault();
-
-    if (!batchForm.name || !batchForm.totalBirds) {
-      alert("Fill all batch fields");
-      return;
-    }
 
     if (editId !== null) {
       await axios.put(`http://localhost:8080/api/batches/${editId}`, {
         id: editId,
         ...batchForm,
-        totalBirds: Number(batchForm.totalBirds),
-        mortality: Number(batchForm.mortality),
       });
       setEditId(null);
     } else {
-      await axios.post("http://localhost:8080/api/batches", {
-        ...batchForm,
-        totalBirds: Number(batchForm.totalBirds),
-        mortality: Number(batchForm.mortality),
-      });
+      await axios.post("http://localhost:8080/api/batches", batchForm);
     }
 
-    setBatchForm({
-      name: "",
-      totalBirds: "",
-      mortality: "",
-    });
-
-    fetchBatches(); // ✅ refresh
+    setBatchForm({ name: "", totalBirds: "", mortality: "" });
+    fetchBatches();
   };
 
-  // Feed Formula
   const handleFormulaSubmit = async (e) => {
     e.preventDefault();
-
     await axios.post("http://localhost:8080/api/feed-formula", formula);
-
-    alert("Formula Saved!");
-
-    setFormula({
-      maizePercent: "",
-      maizePrice: "",
-      soyaPercent: "",
-      soyaPrice: "",
-      dorbPercent: "",
-      dorbPrice: "",
-      marblePercent: "",
-      marblePrice: "",
-      premixPercent: "",
-      premixPrice: "",
-    });
+    alert("Saved");
   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h1 style={{ textAlign: "center" }}>Poultry Expense Tracker 🐔</h1>
+    <div style={container}>
 
-      {/* EXPENSE FORM */}
-      <form style={{ display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center" }} onSubmit={handleSubmit}>
-        <input placeholder="Category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
-        <input placeholder="Amount" type="number" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} />
+      <h1 style={title}>🐔 Poultry Manager</h1>
 
-        <select value={form.batchId} onChange={(e) => {
-          setSelectedBatch(e.target.value);
-          setForm({ ...form, batchId: e.target.value });
-        }}>
-          <option value="">Select Batch</option>
-          {batches.map((b) => (
-            <option key={b.id} value={b.id}>{b.name}</option>
-          ))}
+      {/* FORM */}
+      <form style={formRow} onSubmit={handleSubmit}>
+        <input style={input} value={form.category} placeholder="Category"
+          onChange={(e) => setForm({ ...form, category: e.target.value })} />
+
+        <input style={input} value={form.amount} type="number" placeholder="Amount"
+          onChange={(e) => setForm({ ...form, amount: e.target.value })} />
+
+        <select style={input} value={form.batchId}
+          onChange={(e) => setForm({ ...form, batchId: e.target.value })}>
+          <option value="">Batch</option>
+          {batches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
         </select>
 
-        <input placeholder="Note" value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} />
-        <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
-
-        <button>Add Expense</button>
+        <button style={btnPrimary}>Add</button>
       </form>
 
-      {/* DASHBOARD */}
-      <div style={{ display: "flex", justifyContent: "center", gap: "20px", marginTop: "20px" }}>
-        <div style={card}><h3>Expense</h3><p>₹{total}</p></div>
-        <div style={card}><h3>Sales</h3><p>₹{totalSales}</p></div>
-        <div style={card}><h3>Profit</h3><p style={{ color: profit >= 0 ? "green" : "red" }}>₹{profit}</p></div>
+      {/* CARDS */}
+      <div style={cardRow}>
+        <Card title="Expense" value={total} />
+        <Card title="Sales" value={totalSales} />
+        <Card title="Profit" value={profit} color={profit < 0 ? "red" : "green"} />
       </div>
 
-      {/* EXPENSE LIST */}
-      <h2>Expenses</h2>
-      <ul>
-        {expenses
-          .filter((e) => !selectedBatch || e.batchId == selectedBatch)
-          .map((e) => (
-            <li key={e.id}>
-              {e.category} - ₹{e.amount}
-              <button onClick={() => handleDelete(e.id)}>Delete</button>
-            </li>
-          ))}
-      </ul>
-
-      {/* SALES */}
-      <h2>Sales</h2>
-      <ul>
-        {sales.map((s) => (
-          <li key={s.id}>{s.category} - ₹{s.amount}</li>
+      {/* EXPENSE TABLE */}
+      <h2 style={section}>Expenses</h2>
+      <Table headers={["Category", "Amount", "Action"]}>
+        {expenses.map(e => (
+          <tr key={e.id}>
+            <td>{e.category}</td>
+            <td>₹{e.amount}</td>
+            <td><button style={btnDanger} onClick={() => handleDelete(e.id)}>Delete</button></td>
+          </tr>
         ))}
-      </ul>
+      </Table>
 
-      {/* BATCH FORM */}
-      <h2>Batches</h2>
-      <form onSubmit={handleBatchSubmit}>
-        <input placeholder="Batch Name" value={batchForm.name} onChange={(e) => setBatchForm({ ...batchForm, name: e.target.value })} />
-        <input placeholder="Total Birds" type="number" value={batchForm.totalBirds} onChange={(e) => setBatchForm({ ...batchForm, totalBirds: e.target.value })} />
-        <input placeholder="Mortality" type="number" value={batchForm.mortality} onChange={(e) => setBatchForm({ ...batchForm, mortality: e.target.value })} />
-        <button>{editId !== null ? "Update Batch" : "Add Batch"}</button>
+      {/* BATCH */}
+      <h2 style={section}>Batches</h2>
+      <form style={formRow} onSubmit={handleBatchSubmit}>
+        <input style={input} value={batchForm.name} placeholder="Name"
+          onChange={(e) => setBatchForm({ ...batchForm, name: e.target.value })} />
+
+        <input style={input} value={batchForm.totalBirds} placeholder="Birds"
+          onChange={(e) => setBatchForm({ ...batchForm, totalBirds: e.target.value })} />
+
+        <input style={input} value={batchForm.mortality} placeholder="Mortality"
+          onChange={(e) => setBatchForm({ ...batchForm, mortality: e.target.value })} />
+
+        <button style={btnPrimary}>{editId ? "Update" : "Add"}</button>
       </form>
 
-      {/* BATCH LIST */}
-      <h3>Batch List</h3>
-      <ul>
-        {batches.map((b) => (
-          <li key={b.id}>
-            <strong>{b.name}</strong> - Birds: {b.totalBirds} - Mortality: {b.mortality}
-
-            <button style={{ marginLeft: "10px" }} onClick={() => deleteBatch(b.id)}>Delete</button>
-
-            <button style={{ marginLeft: "10px" }} onClick={() => {
-              setEditId(b.id);
-              setBatchForm({
-                name: b.name,
-                totalBirds: b.totalBirds,
-                mortality: b.mortality,
-              });
-            }}>
-              Edit
-            </button>
-          </li>
+      <Table headers={["Name", "Birds", "Mortality", "Action"]}>
+        {batches.map(b => (
+          <tr key={b.id}>
+            <td>{b.name}</td>
+            <td>{b.totalBirds}</td>
+            <td>{b.mortality}</td>
+            <td>
+              <button style={btnDanger} onClick={() => deleteBatch(b.id)}>Delete</button>
+              <button style={btnEdit} onClick={() => { setEditId(b.id); setBatchForm(b); }}>Edit</button>
+            </td>
+          </tr>
         ))}
-      </ul>
+      </Table>
 
       {/* FEED FORMULA */}
-      <h2>Feed Formula</h2>
-      <form onSubmit={handleFormulaSubmit} style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-        <input placeholder="Maize %" onChange={(e) => setFormula({ ...formula, maizePercent: e.target.value })} />
-        <input placeholder="Maize Price" onChange={(e) => setFormula({ ...formula, maizePrice: e.target.value })} />
-        <input placeholder="Soya %" onChange={(e) => setFormula({ ...formula, soyaPercent: e.target.value })} />
-        <input placeholder="Soya Price" onChange={(e) => setFormula({ ...formula, soyaPrice: e.target.value })} />
-        <input placeholder="Dorb %" onChange={(e) => setFormula({ ...formula, dorbPercent: e.target.value })} />
-        <input placeholder="Dorb Price" onChange={(e) => setFormula({ ...formula, dorbPrice: e.target.value })} />
-        <input placeholder="Marble %" onChange={(e) => setFormula({ ...formula, marblePercent: e.target.value })} />
-        <input placeholder="Marble Price" onChange={(e) => setFormula({ ...formula, marblePrice: e.target.value })} />
-        <input placeholder="Premix %" onChange={(e) => setFormula({ ...formula, premixPercent: e.target.value })} />
-        <input placeholder="Premix Price" onChange={(e) => setFormula({ ...formula, premixPrice: e.target.value })} />
-        <button>Save Formula</button>
-      </form>
+    <h2 style={section}>Feed Formula</h2>
+
+    <form style={formRow} onSubmit={handleFormulaSubmit}>
+
+      <input style={input} placeholder="Maize %" 
+        onChange={(e)=>setFormula({...formula, maizePercent:e.target.value})} />
+
+      <input style={input} placeholder="Maize Price" 
+        onChange={(e)=>setFormula({...formula, maizePrice:e.target.value})} />
+
+      <input style={input} placeholder="Soya %" 
+        onChange={(e)=>setFormula({...formula, soyaPercent:e.target.value})} />
+
+      <input style={input} placeholder="Soya Price" 
+        onChange={(e)=>setFormula({...formula, soyaPrice:e.target.value})} />
+
+      <input style={input} placeholder="Dorb %" 
+        onChange={(e)=>setFormula({...formula, dorbPercent:e.target.value})} />
+
+      <input style={input} placeholder="Dorb Price" 
+        onChange={(e)=>setFormula({...formula, dorbPrice:e.target.value})} />
+
+      <input style={input} placeholder="Marble %" 
+        onChange={(e)=>setFormula({...formula, marblePercent:e.target.value})} />
+
+      <input style={input} placeholder="Marble Price" 
+        onChange={(e)=>setFormula({...formula, marblePrice:e.target.value})} />
+
+      <input style={input} placeholder="Premix %" 
+        onChange={(e)=>setFormula({...formula, premixPercent:e.target.value})} />
+
+      <input style={input} placeholder="Premix Price" 
+        onChange={(e)=>setFormula({...formula, premixPrice:e.target.value})} />
+
+      <button style={btnPrimary}>Save Formula</button>
+
+    </form>
+
     </div>
   );
 }
 
-const card = {
-  border: "1px solid #ddd",
-  padding: "10px",
-  borderRadius: "10px",
-};
+// reusable components
+const Card = ({title,value,color}) => (
+  <div style={card}>
+    <h3>{title}</h3>
+    <p style={{color:color||"#333"}}>₹{value}</p>
+  </div>
+);
+
+const Table = ({headers,children}) => (
+  <table style={table}>
+    <thead>
+      <tr>{headers.map(h => <th key={h}>{h}</th>)}</tr>
+    </thead>
+    <tbody>{children}</tbody>
+  </table>
+);
+
+// styles
+const container={maxWidth:"1000px",margin:"auto",padding:"20px",fontFamily:"Arial"};
+const title={textAlign:"center",fontSize:"36px"};
+const section={marginTop:"30px",textAlign:"center"};
+const formRow={display:"flex",gap:"10px",justifyContent:"center",flexWrap:"wrap"};
+const input={padding:"8px",border:"1px solid #ccc",borderRadius:"6px"};
+const btnPrimary={background:"#2c3e50",color:"white",padding:"8px",border:"none",borderRadius:"6px"};
+const btnDanger={background:"#e74c3c",color:"white",padding:"6px",border:"none",borderRadius:"6px"};
+const btnEdit={background:"#3498db",color:"white",padding:"6px",border:"none",borderRadius:"6px",marginLeft:"5px"};
+const cardRow={display:"flex",gap:"20px",justifyContent:"center",marginTop:"20px"};
+const card={padding:"20px",background:"#f9f9f9",borderRadius:"10px",boxShadow:"0 4px 10px rgba(0,0,0,0.1)",textAlign:"center"};
+const table={width:"100%",marginTop:"15px",borderCollapse:"collapse",textAlign:"center"};
 
 export default App;
