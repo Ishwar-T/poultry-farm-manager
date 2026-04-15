@@ -9,19 +9,19 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/sales")
-@CrossOrigin(origins = "*")
+@CrossOrigin("*")
 public class SaleController {
 
     @Autowired
-    private SaleRepository saleRepository;
+    private SaleRepository repo;
 
     @GetMapping
-    public List<Sale> getAllSales() {
-        return saleRepository.findAll();
+    public List<Sale> getAll() {
+        return repo.findAll();
     }
 
     @PostMapping
-    public Sale addSale(@RequestBody Sale sale) {
-        return saleRepository.save(sale);
+    public Sale save(@RequestBody Sale s) {
+        return repo.save(s);
     }
 }

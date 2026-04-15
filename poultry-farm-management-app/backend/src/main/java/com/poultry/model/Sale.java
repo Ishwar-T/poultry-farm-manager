@@ -1,7 +1,6 @@
 package com.poultry.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
 
 @Entity
 public class Sale {
@@ -9,27 +8,80 @@ public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long batchId;
 
-    private String category;
-    private Double amount;
-    private String note;
-    private LocalDate date;
+    private String type; // EGG / MANURE / CULL
 
-    // Getters
+    // COMMON
+    private double totalAmount;
+    private double paidAmount;
+    private double remainingAmount;
+    private String paymentMode;
+    private String paymentStatus;
+
+    // EGGS
+    private int days;
+    private double avgPerDay;
+    private double totalEggs;
+    private double ratePerEgg;
+
+    // MANURE
+    private double totalKg;
+    private double ratePerKg;
+    private String buyerName;
+
+    // CULLS
+    private int totalBirds;
+    private double avgWeight;
+    private double ratePerBird;
+
+    // ===== GETTERS SETTERS =====
     public Long getId() { return id; }
-    public String getCategory() { return category; }
-    public Double getAmount() { return amount; }
-    public String getNote() { return note; }
-    public LocalDate getDate() { return date; }
-    public Long getBatchId() { return batchId; }
 
-    // Setters
-    public void setId(Long id) { this.id = id; }
-    public void setCategory(String category) { this.category = category; }
-    public void setAmount(Double amount) { this.amount = amount; }
-    public void setNote(String note) { this.note = note; }
-    public void setDate(LocalDate date) { this.date = date; }
-    public void setBatchId(Long batchId) { this.batchId = batchId; }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
 
+    public double getTotalAmount() { return totalAmount; }
+    public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
+
+    public double getPaidAmount() { return paidAmount; }
+    public void setPaidAmount(double paidAmount) { this.paidAmount = paidAmount; }
+
+    public double getRemainingAmount() { return remainingAmount; }
+    public void setRemainingAmount(double remainingAmount) { this.remainingAmount = remainingAmount; }
+
+    public String getPaymentMode() { return paymentMode; }
+    public void setPaymentMode(String paymentMode) { this.paymentMode = paymentMode; }
+
+    public String getPaymentStatus() { return paymentStatus; }
+    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
+
+    public int getDays() { return days; }
+    public void setDays(int days) { this.days = days; }
+
+    public double getAvgPerDay() { return avgPerDay; }
+    public void setAvgPerDay(double avgPerDay) { this.avgPerDay = avgPerDay; }
+
+    public double getTotalEggs() { return totalEggs; }
+    public void setTotalEggs(double totalEggs) { this.totalEggs = totalEggs; }
+
+    public double getRatePerEgg() { return ratePerEgg; }
+    public void setRatePerEgg(double ratePerEgg) { this.ratePerEgg = ratePerEgg; }
+
+    public double getTotalKg() { return totalKg; }
+    public void setTotalKg(double totalKg) { this.totalKg = totalKg; }
+
+    public double getRatePerKg() { return ratePerKg; }
+    public void setRatePerKg(double ratePerKg) { this.ratePerKg = ratePerKg; }
+
+    public String getBuyerName() { return buyerName; }
+    public void setBuyerName(String buyerName) { this.buyerName = buyerName; }
+
+    public int getTotalBirds() { return totalBirds; }
+    public void setTotalBirds(int totalBirds) { this.totalBirds = totalBirds; }
+
+    public double getAvgWeight() { return avgWeight; }
+    public void setAvgWeight(double avgWeight) { this.avgWeight = avgWeight; }
+
+    public double getRatePerBird() { return ratePerBird; }
+    public void setRatePerBird(double ratePerBird) { this.ratePerBird = ratePerBird; }
 }
