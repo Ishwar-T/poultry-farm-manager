@@ -1,9 +1,11 @@
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/service/BatchService.java
+/Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/repository/DailyRecordRepository.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/controller/FeedFormulaController.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/controller/ExpenseController.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/model/FeedFormula.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/HelloController.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/controller/SaleController.java
+/Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/controller/DailyRecordController.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/controller/BatchController.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/model/Sale.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/Application.java
@@ -11,5 +13,7 @@
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/repository/SaleRepository.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/model/Batch.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/repository/FeedFormulaRepository.java
+/Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/service/DailyRecordService.java
+/Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/model/DailyRecord.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/repository/BatchRepository.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/repository/ExpenseRepository.java
