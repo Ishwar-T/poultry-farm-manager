@@ -1,5 +1,6 @@
 package com.poultry.model;
 
+
 import jakarta.persistence.*;
 
 @Entity
@@ -11,13 +12,16 @@ public class Sale {
 
     private String type; // EGG / MANURE / CULL
 
+    private Long batchId;
+
     // COMMON
     private double totalAmount;
     private double paidAmount;
     private double remainingAmount;
     private String paymentMode;
     private String paymentStatus;
-
+    private String date;       
+    private String notes;    
     // EGGS
     private int days;
     private double avgPerDay;
@@ -84,4 +88,14 @@ public class Sale {
 
     public double getRatePerBird() { return ratePerBird; }
     public void setRatePerBird(double ratePerBird) { this.ratePerBird = ratePerBird; }
+
+    public String getDate() { return date; }
+    public void setDate(String date) { this.date = date; }
+
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
+
+    public Long getBatchId() { return batchId;}
+
+    public void setBatchId(Long batchId) { this.batchId = batchId;}
 }

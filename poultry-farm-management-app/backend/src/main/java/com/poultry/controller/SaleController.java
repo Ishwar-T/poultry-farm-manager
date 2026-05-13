@@ -1,9 +1,8 @@
 package com.poultry.controller;
 
 import com.poultry.model.Sale;
-import com.poultry.repository.SaleRepository;
+import com.poultry.service.SaleService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,25 +14,32 @@ import java.util.Optional;
 @CrossOrigin("*")
 public class SaleController {
 
-    @Autowired
-    private SaleRepository repo;
+    private final SaleService saleService;
 
-    // ✅ GET ALL SALES
+    public SaleController(SaleService saleService) {
+        this.saleService = saleService;
+    }
+
+    // GET ALL
     @GetMapping
     public List<Sale> getAll() {
-        return repo.findAll();
+        return saleService.getAllSales();
     }
 
-    // ✅ CREATE SALE
+    // CREATE
     @PostMapping
     public Sale save(@RequestBody Sale s) {
-        return repo.save(s);
+        return saleService.saveSale(s);
     }
 
-    // ✅ UPDATE SALE
+    // UPDATE
     @PutMapping("/{id}")
-    public ResponseEntity<Sale> updateSale(@PathVariable Long id, @RequestBody Sale sale) {
-        Optional<Sale> existing = repo.findById(id);
+    public ResponseEntity<Sale> updateSale(
+            @PathVariable Long id,
+            @RequestBody Sale sale
+    ) {
+
+        Optional<Sale> existing = saleService.getSaleById(id);
 
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -41,14 +47,15 @@ public class SaleController {
 
         Sale ex = existing.get();
 
-        // 🔥 ALL CORRECT FIELDS (as per your model)
         ex.setType(sale.getType());
 
         ex.setTotalAmount(sale.getTotalAmount());
         ex.setPaidAmount(sale.getPaidAmount());
-        ex.setRemainingAmount(sale.getRemainingAmount());
+
         ex.setPaymentMode(sale.getPaymentMode());
-        ex.setPaymentStatus(sale.getPaymentStatus());
+
+        ex.setDate(sale.getDate());
+        ex.setNotes(sale.getNotes());
 
         ex.setDays(sale.getDays());
         ex.setAvgPerDay(sale.getAvgPerDay());
@@ -63,18 +70,21 @@ public class SaleController {
         ex.setAvgWeight(sale.getAvgWeight());
         ex.setRatePerBird(sale.getRatePerBird());
 
-        Sale updated = repo.save(ex);
+        Sale updated = saleService.saveSale(ex);
+
         return ResponseEntity.ok(updated);
     }
 
-    // ✅ DELETE SALE
+    // DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSale(@PathVariable Long id) {
-        if (!repo.existsById(id)) {
+
+        if (!saleService.exists(id)) {
             return ResponseEntity.notFound().build();
         }
 
-        repo.deleteById(id);
+        saleService.deleteSale(id);
+
         return ResponseEntity.noContent().build();
     }
 }

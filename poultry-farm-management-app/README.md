@@ -1,79 +1,206 @@
-# 🐔 Poultry Farm Management System
+# 🐔 Poultry Farm Management ERP
 
-## 📌 Project Name
+A modern poultry farm management web application built using:
 
-Poultry Farm Management System
-
----
-
-## 🚀 What This Project Does
-
-This application helps manage and track daily operations of a poultry farm, including batch management, expenses, sales, and overall farm performance in a simple and efficient way.
+- Frontend: React + Vite
+- Backend: Spring Boot (Java)
+- Database: MySQL
 
 ---
 
-## 🛠️ Tech Stack
+# 🚀 Features
 
-### Frontend
-
-* React (UI development)
-* HTML, CSS, JavaScript
-
-### Backend
-
-* Spring Boot (Java)
-* REST APIs
-
-### Database
-
-* MySQL
+## ✅ Dashboard
+- Total Expenses
+- Total Sales
+- Profit / Loss
+- Mortality %
+- Batch-wise Analytics
+- Charts Dashboard
+- PDF Report Export
 
 ---
 
-## 📂 Project Structure (Upload Order)
-
-Please upload files in the following order for proper analysis:
-
-1. **Frontend**
-
-   * React components
-   * Pages (App.jsx, components, styles)
-
-2. **Backend**
-
-   * Spring Boot project
-   * Controllers, Services, Repositories
-
-3. **Database**
-
-   * SQL schema
-   * Tables structure
-   * Sample data (if any)
-
-4. **Configuration Files**
-
-   * application.properties
-   * .env (without sensitive data)
-   * package.json / pom.xml
+## ✅ Batch Management
+- Add Batch
+- Edit Batch
+- Delete Batch
+- Search Batches
 
 ---
 
-## 📊 Key Features
-
-* Batch Management (Add / View batches)
-* Expense Tracking (Feed, Medicine, Electricity)
-* Sales Tracking
-* Mortality Tracking
-* Dashboard (Total Expense, Income, Profit)
+## ✅ Expense Management
+- Batch-wise Expenses
+- Expense Tracking
+- Notes Support
 
 ---
 
-## 🎯 Goal
-
-To simplify poultry farm operations and provide a centralized system for better decision-making and efficiency.
+## ✅ Sales Management
+- Batch-wise Sales
+- Payment Tracking
+- Remaining Amount
+- Payment Status
 
 ---
 
-## ⚠️ Note
+## ✅ Daily Records
+- Feed Consumption
+- Mortality Tracking
+- Egg Production
+- Daily Farm Monitoring
 
-This project is under development and will be improved step-by-step with better architecture, performance, and scalability.
+---
+
+## ✅ Feed Formula System
+- Formula Management
+- Feed Cost Per KG
+- Percentage Validation
+- Formula Calculations
+
+---
+
+## ✅ Modern UI
+- Sidebar Navigation
+- Dark Mode
+- Responsive Layout
+- Modern Tables
+- Search Features
+
+---
+
+# 🛠 Tech Stack
+
+## Frontend
+- React
+- Vite
+- Axios
+- Recharts
+- jsPDF
+
+## Backend
+- Spring Boot
+- Spring Data JPA
+- REST APIs
+
+## Database
+- MySQL
+
+---
+
+# 📂 Project Structure
+
+## Frontend
+```bash
+frontend/
+```
+
+## Backend
+```bash
+backend/
+```
+
+---
+
+# ⚙️ Backend Setup
+
+## 1️⃣ Open backend folder
+
+```bash
+cd backend
+```
+
+## 2️⃣ Configure MySQL
+
+Update:
+```properties
+src/main/resources/application.properties
+```
+
+Example:
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/poultry_db
+spring.datasource.username=root
+spring.datasource.password=yourpassword
+
+spring.jpa.hibernate.ddl-auto=update
+```
+
+## 3️⃣ Run backend
+
+```bash
+./mvnw spring-boot:run
+```
+
+Backend runs on:
+```bash
+http://localhost:8080
+```
+
+---
+
+# ⚙️ Frontend Setup
+
+## 1️⃣ Open frontend folder
+
+```bash
+cd frontend
+```
+
+## 2️⃣ Install dependencies
+
+```bash
+npm install
+```
+
+## 3️⃣ Run frontend
+
+```bash
+npm run dev
+```
+
+Frontend runs on:
+```bash
+http://localhost:5173
+```
+
+---
+
+# 📄 PDF Reports
+
+Dashboard includes:
+- Download PDF Report
+- Batch-wise Profit Report
+
+---
+
+# 📊 Charts Included
+
+- Profit Charts
+- Expense Distribution
+- Batch Analytics
+
+---
+
+# 🌙 Dark Mode
+
+Supports:
+- Light Mode
+- Dark Mode
+
+---
+
+# 🔥 Future Improvements
+
+- Authentication
+- Cloud Deployment
+- AI Feed Optimization
+- Mobile App
+- Notifications System
+
+---
+
+# 👨‍💻 Developer
+
+Built by Ishwar Thorat

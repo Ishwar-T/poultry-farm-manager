@@ -8,12 +8,15 @@
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/controller/DailyRecordController.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/controller/BatchController.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/model/Sale.java
+/Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/service/ExpenseService.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/Application.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/model/Expense.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/repository/SaleRepository.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/model/Batch.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/repository/FeedFormulaRepository.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/service/DailyRecordService.java
+/Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/config/CorsConfig.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/model/DailyRecord.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/repository/BatchRepository.java
 /Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/repository/ExpenseRepository.java
+/Users/ishwar/projects/poultry-farm-management-app/backend/src/main/java/com/poultry/service/SaleService.java

@@ -2,7 +2,7 @@ package com.poultry.controller;
 
 import com.poultry.model.Batch;
 import com.poultry.service.BatchService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,23 +12,36 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class BatchController {
 
-    @Autowired
-    private BatchService batchService;
+    private final BatchService batchService;
+
+    public BatchController(BatchService batchService) {
+        this.batchService = batchService;
+    }
+
+    // ✅ GET ALL
     @GetMapping
     public List<Batch> getAll() {
         return batchService.getAllBatches();
     }
 
+    // ✅ CREATE
     @PostMapping
-    public Batch add(@RequestBody Batch batch) {
-        return batchService.saveBatch(batch);
+    public ResponseEntity<Batch> add(@RequestBody Batch batch) {
+        Batch saved = batchService.saveBatch(batch);
+        return ResponseEntity.ok(saved);
     }
-    @PutMapping("/{id}")
-    public Batch update(@PathVariable Long id, @RequestBody Batch batch) {
-    return batchService.updateBatch(id, batch);    }
 
+    // ✅ UPDATE
+    @PutMapping("/{id}")
+    public ResponseEntity<Batch> update(@PathVariable Long id, @RequestBody Batch batch) {
+        Batch updated = batchService.updateBatch(id, batch);
+        return ResponseEntity.ok(updated);
+    }
+
+    // ✅ DELETE
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         batchService.deleteBatch(id);
+        return ResponseEntity.noContent().build();
     }
 }

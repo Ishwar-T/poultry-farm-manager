@@ -1,54 +1,137 @@
 // src/pages/FeedPage.jsx
+
 import React, { useEffect, useState } from "react";
+
 import FeedForm from "../components/Feed/FeedForm";
 import FeedList from "../components/Feed/FeedList";
+
 import {
   getFeedFormulas,
   createFeedFormula,
   updateFeedFormula,
-  deleteFeedFormula
+  deleteFeedFormula,
 } from "../services/api";
 
 const FeedPage = () => {
 
+  const emptyForm = {
+    formulaName: "",
+
+    maizePercent: "",
+    maizePrice: "",
+
+    soyaPercent: "",
+    soyaPrice: "",
+
+    dorbPercent: "",
+    dorbPrice: "",
+
+    marblePercent: "",
+    marblePrice: "",
+
+    premixPercent: "",
+    premixPrice: "",
+  };
+
   const [feeds, setFeeds] = useState([]);
-  const [form, setForm] = useState({});
+  const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
 
   const fetchData = async () => {
-    const res = await getFeedFormulas();
-    setFeeds(Array.isArray(res.data) ? res.data : []);  };
+    try {
+
+      const res = await getFeedFormulas();
+
+      console.log(res.data);
+
+      setFeeds(Array.isArray(res.data) ? res.data : [res.data]);
+
+    } catch (error) {
+
+      console.error("Error fetching feed formulas", error);
+
+      setFeeds([]);
+    }
+  };
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const onSubmit = async () => {
-    if (editingId) {
-      await updateFeedFormula(editingId, form);
-    } else {
-      await createFeedFormula(form);
+
+    try {
+
+      const payload = {
+        formulaName: form.formulaName,
+
+        maizePercent: Number(form.maizePercent) || 0,
+        maizePrice: Number(form.maizePrice) || 0,
+
+        soyaPercent: Number(form.soyaPercent) || 0,
+        soyaPrice: Number(form.soyaPrice) || 0,
+
+        dorbPercent: Number(form.dorbPercent) || 0,
+        dorbPrice: Number(form.dorbPrice) || 0,
+
+        marblePercent: Number(form.marblePercent) || 0,
+        marblePrice: Number(form.marblePrice) || 0,
+
+        premixPercent: Number(form.premixPercent) || 0,
+        premixPrice: Number(form.premixPrice) || 0,
+      };
+      console.log(payload);
+
+      if (editingId) {
+        await updateFeedFormula(editingId, payload);
+      } else {
+        await createFeedFormula(payload);
+      }
+
+      setForm(emptyForm);
+      setEditingId(null);
+
+      fetchData();
+
+    } catch (error) {
+      console.error("Error saving feed formula", error);
     }
-    setForm({});
-    setEditingId(null);
-    fetchData();
   };
 
-  const onEdit = (f) => {
-    setForm(f);
-    setEditingId(f.id);
+  const onEdit = (feed) => {
+    setForm(feed);
+    setEditingId(feed.id);
   };
 
   const onDelete = async (id) => {
-    await deleteFeedFormula(id);
-    fetchData();
+
+    try {
+      await deleteFeedFormula(id);
+      fetchData();
+
+    } catch (error) {
+      console.error("Error deleting feed formula", error);
+    }
   };
 
   return (
     <div>
-      <h2>Feed Formula</h2>
-      <FeedForm form={form} setForm={setForm} onSubmit={onSubmit} editingId={editingId} />
-      <FeedList feeds={feeds} onEdit={onEdit} onDelete={onDelete} />
+
+      <h2>Feed Formula Management</h2>
+
+      <FeedForm
+        form={form}
+        setForm={setForm}
+        onSubmit={onSubmit}
+        editingId={editingId}
+      />
+
+      <FeedList
+        feeds={feeds}
+        onEdit={onEdit}
+        onDelete={onDelete}
+      />
+
     </div>
   );
 };

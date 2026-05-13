@@ -9,6 +9,11 @@ public class FeedFormula {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    private String formulaName;
     private double maizePercent;
     private double maizePrice;
 
@@ -27,6 +32,9 @@ public class FeedFormula {
     // getters & setters
 
     public Long getId() { return id; }
+
+    public String getFormulaName() { return formulaName; }
+    public void setFormulaName(String formulaName) { this.formulaName = formulaName;}
 
     public double getMaizePercent() { return maizePercent; }
     public void setMaizePercent(double maizePercent) { this.maizePercent = maizePercent; }

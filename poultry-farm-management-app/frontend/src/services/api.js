@@ -1,28 +1,76 @@
-// src/services/api.js
 import axios from "axios";
-const BASE = "http://localhost:8080/api";
 
-export const getExpenses = () => axios.get(`${BASE}/expenses`);
-export const createExpense = (data) => axios.post(`${BASE}/expenses`, data);
-export const updateExpense = (id, data) => axios.put(`${BASE}/expenses/${id}`, data);
-export const deleteExpense = (id) => axios.delete(`${BASE}/expenses/${id}`);
+const API = axios.create({
+  baseURL: "http://localhost:8080/api"
+});
 
-export const getBatches = () => axios.get(`${BASE}/batches`);
-export const createBatch = (data) => axios.post(`${BASE}/batches`, data);
-export const updateBatch = (id, data) => axios.put(`${BASE}/batches/${id}`, data);
-export const deleteBatch = (id) => axios.delete(`${BASE}/batches/${id}`);
 
-export const getSales = () => axios.get(`${BASE}/sales`);
-export const createSale = (data) => axios.post(`${BASE}/sales`, data);
-export const updateSale = (id, data) => axios.put(`${BASE}/sales/${id}`, data);
-export const deleteSale = (id) => axios.delete(`${BASE}/sales/${id}`);
+// ================= BATCH =================
 
-export const getDailyRecords = () => axios.get(`${BASE}/daily-records`);
-export const createDailyRecord = (data) => axios.post(`${BASE}/daily-records`, data);
-export const updateDailyRecord = (id, data) => axios.put(`${BASE}/daily-records/${id}`, data);
-export const deleteDailyRecord = (id) => axios.delete(`${BASE}/daily-records/${id}`);
+export const getBatches = () => API.get("/batches");
 
-export const getFeedFormulas = () => axios.get(`${BASE}/feed-formula`);
-export const createFeedFormula = (data) => axios.post(`${BASE}/feed-formula`, data);
-export const updateFeedFormula = (id, data) => axios.put(`${BASE}/feed-formula/${id}`, data);
-export const deleteFeedFormula = (id) => axios.delete(`${BASE}/feed-formula/${id}`);
+export const createBatch = (data) => API.post("/batches", data);
+
+export const updateBatch = (id, data) =>
+  API.put(`/batches/${id}`, data);
+
+export const deleteBatch = (id) =>
+  API.delete(`/batches/${id}`);
+
+
+// ================= EXPENSE =================
+
+export const getExpenses = () => API.get("/expenses");
+
+export const createExpense = (data) =>
+  API.post("/expenses", data);
+
+export const updateExpense = (id, data) =>
+  API.put(`/expenses/${id}`, data);
+
+export const deleteExpense = (id) =>
+  API.delete(`/expenses/${id}`);
+
+
+// ================= SALES =================
+
+export const getSales = () => API.get("/sales");
+
+export const createSale = (data) =>
+  API.post("/sales", data);
+
+export const updateSale = (id, data) =>
+  API.put(`/sales/${id}`, data);
+
+export const deleteSale = (id) =>
+  API.delete(`/sales/${id}`);
+
+
+// ================= DAILY =================
+
+export const getDailyRecords = () =>
+  API.get("/daily-records");
+
+export const createDailyRecord = (data) =>
+  API.post("/daily-records", data);
+
+export const updateDailyRecord = (id, data) =>
+  API.put(`/daily-records/${id}`, data);
+
+export const deleteDailyRecord = (id) =>
+  API.delete(`/daily-records/${id}`);
+
+
+// ================= FEED =================
+
+export const getFeedFormulas = () =>
+  API.get("/feed-formulas");
+
+export const createFeedFormula = (data) =>
+  API.post("/feed-formulas", data);
+
+export const updateFeedFormula = (id, data) =>
+  API.put(`/feed-formulas/${id}`, data);
+
+export const deleteFeedFormula = (id) =>
+  API.delete(`/feed-formulas/${id}`);

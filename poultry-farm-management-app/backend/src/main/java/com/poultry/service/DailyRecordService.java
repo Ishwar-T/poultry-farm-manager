@@ -1,4 +1,5 @@
 package com.poultry.service;
+import java.util.Optional;
 
 import com.poultry.model.DailyRecord;
 import com.poultry.repository.DailyRecordRepository;
@@ -21,4 +22,24 @@ public class DailyRecordService {
     }
 
     public void deleteById(Long id) { repo.deleteById(id); }
+
+    public DailyRecord update(Long id, DailyRecord record) {
+
+        Optional<DailyRecord> existing = repo.findById(id);
+
+        if (existing.isEmpty()) {
+            return null;
+        }
+
+        DailyRecord ex = existing.get();
+
+        ex.setRecordDate(record.getRecordDate());
+        ex.setTotalBirds(record.getTotalBirds());
+        ex.setFeedConsumedKg(record.getFeedConsumedKg());
+        ex.setMortalityCount(record.getMortalityCount());
+        ex.setEggsProduced(record.getEggsProduced());
+
+        return repo.save(ex);
+    }
+
 }

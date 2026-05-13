@@ -1,11 +1,9 @@
 package com.poultry.controller;
 
-import java.util.Optional;
 import com.poultry.model.Expense;
-import com.poultry.repository.ExpenseRepository;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.poultry.service.ExpenseService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,43 +12,55 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class ExpenseController {
 
-    private final ExpenseRepository repo;
-    @Autowired
-    private ExpenseRepository expenseRepository;
+    private final ExpenseService expenseService;
 
-    public ExpenseController(ExpenseRepository repo) {
-        this.repo = repo;
+    public ExpenseController(ExpenseService expenseService) {
+        this.expenseService = expenseService;
     }
 
+    // ADD EXPENSE
     @PostMapping
     public Expense addExpense(@RequestBody Expense expense) {
-        return repo.save(expense);
+        return expenseService.saveExpense(expense);
     }
 
+    // GET ALL
     @GetMapping
     public List<Expense> getAllExpenses() {
-        return repo.findAll();
+        return expenseService.getAllExpenses();
     }
+
+    // DELETE
     @DeleteMapping("/{id}")
     public void deleteExpense(@PathVariable Long id) {
-        expenseRepository.deleteById(id);
+        expenseService.deleteExpense(id);
     }
 
+    // UPDATE
     @PutMapping("/{id}")
-    public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody Expense expense) {
-        Optional<Expense> existing = repo.findById(id);
+    public ResponseEntity<Expense> updateExpense(
+            @PathVariable Long id,
+            @RequestBody Expense expense
+    ) {
 
-        if (existing.isEmpty()) {
+        List<Expense> expenses = expenseService.getAllExpenses();
+
+        Expense existing = expenses.stream()
+                .filter(e -> e.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+
+        if (existing == null) {
             return ResponseEntity.notFound().build();
         }
 
-        Expense ex = existing.get();
+        existing.setCategory(expense.getCategory());
+        existing.setAmount(expense.getAmount());
+        existing.setDate(expense.getDate());
+        existing.setNote(expense.getNote());
 
-        ex.setCategory(expense.getCategory());
-        ex.setAmount(expense.getAmount());
-        ex.setDate(expense.getDate());
-        ex.setNote(expense.getNote());
+        Expense updated = expenseService.saveExpense(existing);
 
-        return ResponseEntity.ok(repo.save(ex));
+        return ResponseEntity.ok(updated);
     }
 }

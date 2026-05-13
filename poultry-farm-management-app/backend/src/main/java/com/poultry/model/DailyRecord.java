@@ -3,6 +3,7 @@ package com.poultry.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+
 @Entity
 @Table(name = "daily_records")
 public class DailyRecord {
@@ -11,6 +12,7 @@ public class DailyRecord {
     private Long id;
 
     private LocalDate recordDate;
+    private Long batchId;
 
     private Integer totalBirds;
     private Double feedConsumedKg;
@@ -37,4 +39,8 @@ public class DailyRecord {
 
     public Double getEggsProduced() { return eggsProduced; }
     public void setEggsProduced(Double eggsProduced) { this.eggsProduced = eggsProduced; }
+
+    public Long getBatchId() { return batchId;}
+
+    public void setBatchId(Long batchId) { this.batchId = batchId;}
 }
