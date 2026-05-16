@@ -1,43 +1,4 @@
-// src/components/Daily/DailyForm.jsx
-
-import React from "react";
-
 import React, { useEffect, useMemo } from "react";
-
-const today = new Date().toISOString().split("T")[0];
-
-const selectedBatch = useMemo(() => {
-  return (batches || []).find(
-    (b) => Number(b.id) === Number(form.batchId)
-  );
-}, [batches, form.batchId]);
-
-const previousMortality = useMemo(() => {
-  return (records || [])
-    .filter((r) => {
-      const sameBatch = Number(r.batchId) === Number(form.batchId);
-      const notCurrentEdit = !editingId || Number(r.id) !== Number(editingId);
-      const withinDate =
-        !form.recordDate || !r.recordDate || r.recordDate <= form.recordDate;
-
-      return sameBatch && notCurrentEdit && withinDate;
-    })
-    .reduce((sum, r) => sum + Number(r.mortalityCount || 0), 0);
-}, [records, form.batchId, form.recordDate, editingId]);
-
-const remainingBirds = Math.max(
-  0,
-  Number(selectedBatch?.totalBirds || 0) -
-  previousMortality -
-  Number(form.mortalityCount || 0)
-);
-
-useEffect(() => {
-  setForm((prev) => ({
-    ...prev,
-    totalBirds: remainingBirds
-  }));
-}, [remainingBirds, setForm]);
 
 const DailyForm = ({
   form,
@@ -48,6 +9,11 @@ const DailyForm = ({
   records = []
 }) => {
 
+  const today = new Date()
+    .toISOString()
+    .split("T")[0];
+
+  // 🔥 HANDLE INPUT
   const handle = (e) => {
 
     setForm((prev) => ({
@@ -55,6 +21,64 @@ const DailyForm = ({
       [e.target.name]: e.target.value
     }));
   };
+
+  // 🔥 SELECTED BATCH
+  const selectedBatch = useMemo(() => {
+
+    return (batches || []).find(
+      (b) => Number(b.id) === Number(form.batchId)
+    );
+
+  }, [batches, form.batchId]);
+
+  // 🔥 PREVIOUS MORTALITY
+  const previousMortality = useMemo(() => {
+
+    return (records || [])
+
+      .filter((r) => {
+
+        const sameBatch =
+          Number(r.batchId) === Number(form.batchId);
+
+        const notCurrentEdit =
+          !editingId || Number(r.id) !== Number(editingId);
+
+        return sameBatch && notCurrentEdit;
+
+      })
+
+      .reduce(
+
+        (sum, r) =>
+          sum + Number(r.mortalityCount || 0),
+
+        0
+      );
+
+  }, [records, form.batchId, editingId]);
+
+  // 🔥 AUTO REMAINING
+  const remainingBirds = Math.max(
+
+    0,
+
+    Number(selectedBatch?.totalBirds || 0)
+
+    - previousMortality
+
+    - Number(form.mortalityCount || 0)
+  );
+
+  // 🔥 AUTO UPDATE FORM
+  useEffect(() => {
+
+    setForm((prev) => ({
+      ...prev,
+      totalBirds: remainingBirds
+    }));
+
+  }, [remainingBirds]);
 
   return (
 
@@ -65,11 +89,11 @@ const DailyForm = ({
 
         onSubmit();
       }}
+
       style={{
         background: "white",
         padding: "20px",
         borderRadius: "10px",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
         marginBottom: "20px"
       }}
     >
@@ -82,7 +106,7 @@ const DailyForm = ({
         }}
       >
 
-        {/* 🔥 BATCH SELECT */}
+        {/* BATCH */}
         <select
           name="batchId"
           value={form.batchId || ""}
@@ -101,7 +125,7 @@ const DailyForm = ({
               key={b.id}
               value={b.id}
             >
-              {b.name || `Batch ${b.id}`}
+              {b.name}
             </option>
 
           ))}
@@ -114,20 +138,21 @@ const DailyForm = ({
           type="date"
           value={form.recordDate || ""}
           onChange={handle}
-          min={selectedBatch?.startDate}
-          max={new Date().toISOString().split("T")[0]}
+          min={selectedBatch?.startDate || ""}
+          max={today}
           required
           style={inputStyle}
         />
 
-        {/* TOTAL BIRDS */}
-        <label>Remaining Birds</label>
-        
+        {/* REMAINING BIRDS */}
         <input
-          name="totalBirds"
           value={form.totalBirds || ""}
           readOnly
-          style={inputStyle}
+          placeholder="Remaining Birds"
+          style={{
+            ...inputStyle,
+            background: "#f3f4f6"
+          }}
         />
 
         {/* FEED */}
@@ -162,19 +187,14 @@ const DailyForm = ({
 
       </div>
 
-      {/* BUTTON */}
-      <div style={{ marginTop: "15px" }}>
-
-        <button
-          type="submit"
-          style={buttonStyle}
-        >
-          {editingId
-            ? "Update Record"
-            : "Save Record"}
-        </button>
-
-      </div>
+      <button
+        type="submit"
+        style={buttonStyle}
+      >
+        {editingId
+          ? "Update Record"
+          : "Save Record"}
+      </button>
 
     </form>
   );
@@ -183,18 +203,30 @@ const DailyForm = ({
 // 🔥 STYLES
 
 const inputStyle = {
+
   padding: "10px",
-  borderRadius: "6px",
+
   border: "1px solid #ccc",
+
+  borderRadius: "6px",
+
   minWidth: "180px"
 };
 
 const buttonStyle = {
-  padding: "10px 18px",
-  border: "none",
-  borderRadius: "6px",
+
+  padding: "10px 20px",
+
   background: "#2563eb",
+
   color: "white",
+
+  border: "none",
+
+  borderRadius: "6px",
+
+  marginTop: "15px",
+
   cursor: "pointer"
 };
 
