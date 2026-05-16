@@ -1,7 +1,6 @@
 // src/components/Sales/SalesForm.jsx
 
-import React from "react";
-
+import React, { useMemo } from "react";
 const SalesForm = ({
   form,
   setForm,
@@ -9,6 +8,20 @@ const SalesForm = ({
   editingId,
   batches = []
 }) => {
+  const today = new Date()
+    .toISOString()
+    .split("T")[0];
+
+  const selectedBatch = useMemo(() => {
+
+    return (batches || []).find(
+
+      (b) =>
+        Number(b.id) === Number(form.batchId)
+
+    );
+
+  }, [batches, form.batchId]);
 
   const handle = (e) => {
 
@@ -107,6 +120,8 @@ const SalesForm = ({
           type="date"
           value={form.date || ""}
           onChange={handle}
+          min={selectedBatch?.startDate || ""}
+          max={today}
           style={inputStyle}
         />
 
