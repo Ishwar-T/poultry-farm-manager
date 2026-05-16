@@ -152,6 +152,7 @@ const DailyPage = () => {
         onSubmit={onSubmit}
         editingId={editingId}
         batches={batches}
+        records={records}
       />
 
       <DailyList

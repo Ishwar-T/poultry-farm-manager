@@ -7,7 +7,7 @@ const DailyList = ({ records, onEdit, onDelete }) => {
       <thead>
         <tr>
           <th>Date</th>
-          <th>Birds</th>
+          <th>Remaining Birds</th>
           <th>Feed</th>
           <th>Mortality</th>
           <th>Eggs</th>
@@ -18,7 +18,7 @@ const DailyList = ({ records, onEdit, onDelete }) => {
         {records.map(r => (
           <tr key={r.id}>
             <td>{r.recordDate}</td>
-            <td>{r.totalBirds}</td>
+            <td>{record.totalBirds}</td>
             <td>{r.feedConsumedKg}</td>
             <td>{r.mortalityCount}</td>
             <td>{r.eggsProduced}</td>

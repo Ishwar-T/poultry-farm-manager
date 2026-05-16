@@ -2,12 +2,50 @@
 
 import React from "react";
 
+import React, { useEffect, useMemo } from "react";
+
+const today = new Date().toISOString().split("T")[0];
+
+const selectedBatch = useMemo(() => {
+  return (batches || []).find(
+    (b) => Number(b.id) === Number(form.batchId)
+  );
+}, [batches, form.batchId]);
+
+const previousMortality = useMemo(() => {
+  return (records || [])
+    .filter((r) => {
+      const sameBatch = Number(r.batchId) === Number(form.batchId);
+      const notCurrentEdit = !editingId || Number(r.id) !== Number(editingId);
+      const withinDate =
+        !form.recordDate || !r.recordDate || r.recordDate <= form.recordDate;
+
+      return sameBatch && notCurrentEdit && withinDate;
+    })
+    .reduce((sum, r) => sum + Number(r.mortalityCount || 0), 0);
+}, [records, form.batchId, form.recordDate, editingId]);
+
+const remainingBirds = Math.max(
+  0,
+  Number(selectedBatch?.totalBirds || 0) -
+  previousMortality -
+  Number(form.mortalityCount || 0)
+);
+
+useEffect(() => {
+  setForm((prev) => ({
+    ...prev,
+    totalBirds: remainingBirds
+  }));
+}, [remainingBirds, setForm]);
+
 const DailyForm = ({
   form,
   setForm,
   onSubmit,
   editingId,
-  batches = []
+  batches = [],
+  records = []
 }) => {
 
   const handle = (e) => {
@@ -76,17 +114,19 @@ const DailyForm = ({
           type="date"
           value={form.recordDate || ""}
           onChange={handle}
+          min={selectedBatch?.startDate}
+          max={new Date().toISOString().split("T")[0]}
           required
           style={inputStyle}
         />
 
         {/* TOTAL BIRDS */}
+        <label>Remaining Birds</label>
+        
         <input
           name="totalBirds"
-          type="number"
-          placeholder="Total Birds"
           value={form.totalBirds || ""}
-          onChange={handle}
+          readOnly
           style={inputStyle}
         />
 
