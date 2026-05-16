@@ -53,13 +53,13 @@ const Dashboard = () => {
         batchRes
       ] = await Promise.all([
 
-        axios.get("http://localhost:8080/api/expenses"),
+        axios.get("https://poultry-erp-api.onrender.com/api/expenses"),
 
-        axios.get("http://localhost:8080/api/sales"),
+        axios.get("https://poultry-erp-api.onrender.com/api/sales"),
 
-        axios.get("http://localhost:8080/api/daily-records"),
+        axios.get("https://poultry-erp-api.onrender.com/api/daily-records"),
 
-        axios.get("http://localhost:8080/api/batches")
+        axios.get("https://poultry-erp-api.onrender.com/api/batches")
       ]);
 
       const expenses = expRes.data || [];
