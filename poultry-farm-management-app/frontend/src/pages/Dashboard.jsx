@@ -88,7 +88,7 @@ const Dashboard = () => {
       );
 
       const mortalitySum = (dailyRes.data || []).reduce(
-        (sum, r) => sum + Number(r.mortality || 0),
+        (sum, r) => sum + Number(r.mortalityCount || 0),
         0
       );
 
