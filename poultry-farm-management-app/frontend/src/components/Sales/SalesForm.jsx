@@ -108,10 +108,6 @@ const SalesForm = ({
             Manure Sale
           </option>
 
-          <option value="CULL">
-            Cull Bird Sale
-          </option>
-
           <option value="OTHER">
             Other
           </option>
