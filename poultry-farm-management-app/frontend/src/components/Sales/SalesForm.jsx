@@ -84,14 +84,39 @@ const SalesForm = ({
         </select>
 
         {/* TYPE */}
-        <input
+        <select
           name="type"
-          placeholder="Type (EGG/MANURE/CULL)"
           value={form.type || ""}
           onChange={handle}
           required
           style={inputStyle}
-        />
+        >
+
+          <option value="">
+            Select Type
+          </option>
+
+          <option value="EGG">
+            Egg Sale
+          </option>
+
+          <option value="BIRD">
+            Bird Sale
+          </option>
+
+          <option value="MANURE">
+            Manure Sale
+          </option>
+
+          <option value="CULL">
+            Cull Bird Sale
+          </option>
+
+          <option value="OTHER">
+            Other
+          </option>
+
+        </select>
 
         {/* TOTAL */}
         <input
