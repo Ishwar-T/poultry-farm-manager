@@ -200,6 +200,17 @@ const DailyForm = ({
           style={inputStyle}
         />
 
+        {/* PRODUCTION % */}
+        <input
+          value={form.productionPercent || ""}
+          readOnly
+          placeholder="Production %"
+          style={{
+            ...inputStyle,
+            background: "#f3f4f6"
+          }}
+        />
+
       </div>
 
       <button

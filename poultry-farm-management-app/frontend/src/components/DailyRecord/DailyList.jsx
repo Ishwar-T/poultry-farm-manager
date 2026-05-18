@@ -11,6 +11,7 @@ const DailyList = ({ records, onEdit, onDelete }) => {
           <th>Feed</th>
           <th>Mortality</th>
           <th>Eggs</th>
+          <th>Production %</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -22,6 +23,7 @@ const DailyList = ({ records, onEdit, onDelete }) => {
             <td>{r.feedConsumedKg}</td>
             <td>{r.mortalityCount}</td>
             <td>{r.eggsProduced}</td>
+            <td>{r.productionPercent}%</td>
             <td>
               <button onClick={()=>onEdit(r)}>Edit</button>
               <button onClick={()=>onDelete(r.id)}>Delete</button>
