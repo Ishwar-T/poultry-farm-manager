@@ -4,6 +4,7 @@ import React, { useState } from "react";
 
 const BatchList = ({
   batches,
+  dailyRecords = [],
   onEdit,
   onDelete
 }) => {
@@ -135,17 +136,38 @@ const BatchList = ({
                 </td>
 
                 <td
-                  style={{
-                    ...tdStyle,
-                    color:
-                      b.mortality > 0
-                        ? "#dc2626"
-                        : "#16a34a",
-                    fontWeight: "bold"
-                  }}
-                >
-                  {b.mortality}
-                </td>
+                style={{
+                  ...tdStyle,
+                  color:
+                    dailyRecords
+                      .filter(
+                        (r) =>
+                          Number(r.batchId) === Number(b.id)
+                      )
+                      .reduce(
+                        (sum, r) =>
+                          sum + Number(r.mortalityCount || 0),
+                        0
+                      ) > 0
+                      ? "#dc2626"
+                      : "#16a34a",
+
+                  fontWeight: "bold"
+                }}
+              >
+                {
+                  dailyRecords
+                    .filter(
+                      (r) =>
+                        Number(r.batchId) === Number(b.id)
+                    )
+                    .reduce(
+                      (sum, r) =>
+                        sum + Number(r.mortalityCount || 0),
+                      0
+                    )
+                }
+              </td>
 
                 <td style={tdStyle}>
                   {b.startDate}
