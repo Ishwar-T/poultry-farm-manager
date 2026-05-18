@@ -13,6 +13,7 @@ public class DailyRecord {
 
     private LocalDate recordDate;
     private Long batchId;
+    private Double productionPercent;
 
     private Integer totalBirds;
     private Double feedConsumedKg;
@@ -43,4 +44,12 @@ public class DailyRecord {
     public Long getBatchId() { return batchId;}
 
     public void setBatchId(Long batchId) { this.batchId = batchId;}
+
+    public Double getProductionPercent() {
+        return productionPercent;
+    }
+
+    public void setProductionPercent(Double productionPercent) {
+        this.productionPercent = productionPercent;
+    }
 }
