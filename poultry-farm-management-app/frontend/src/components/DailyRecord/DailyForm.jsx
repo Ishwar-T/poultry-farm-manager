@@ -70,16 +70,31 @@ const DailyForm = ({
     - Number(form.mortalityCount || 0)
   );
 
+  const productionPercent = remainingBirds > 0
+
+  ? (
+
+      Number(form.eggsProduced || 0)
+
+      / remainingBirds
+
+    ) * 100
+
+  : 0;
+
   // 🔥 AUTO UPDATE FORM
   useEffect(() => {
 
     setForm((prev) => ({
       ...prev,
-      totalBirds: remainingBirds
+
+      totalBirds: remainingBirds,
+
+      productionPercent:
+        productionPercent.toFixed(2)
     }));
 
-  }, [remainingBirds]);
-
+  }, [remainingBirds, productionPercent]);
   return (
 
     <form
