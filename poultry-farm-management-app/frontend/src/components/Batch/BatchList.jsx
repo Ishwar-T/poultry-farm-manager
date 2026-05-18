@@ -94,6 +94,10 @@ const BatchList = ({
             </th>
 
             <th style={thStyle}>
+              Remaining
+            </th>
+
+            <th style={thStyle}>
               Start Date
             </th>
 
@@ -167,6 +171,29 @@ const BatchList = ({
                       0
                     )
                 }
+              </td>
+
+              <td style={tdStyle}>
+
+                {
+
+                  Number(b.totalBirds || 0)
+
+                  -
+
+                  dailyRecords
+                    .filter(
+                      (r) =>
+                        Number(r.batchId) === Number(b.id)
+                    )
+                    .reduce(
+                      (sum, r) =>
+                        sum + Number(r.mortalityCount || 0),
+                      0
+                    )
+
+                }
+
               </td>
 
                 <td style={tdStyle}>
